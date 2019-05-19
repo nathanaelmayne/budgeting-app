@@ -1,0 +1,80 @@
+service: budgie-api
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: ap-southeast-2
+  environment:
+    TRANSACTION_TABLE: '${self:service}-transaction'
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.TRANSACTION_TABLE}"
+
+functions:
+  create:
+    handler: transaction/create.create
+    events:
+      - http:
+          path: transaction
+          method: post
+          cors: true
+
+  list:
+    handler: transaction/list.list
+    events:
+      - http:
+          path: transaction
+          method: get
+          cors: true
+
+  get:
+    handler: transaction/get.get
+    events:
+      - http:
+          path: transaction/{id}
+          method: get
+          cors: true
+
+  update:
+    handler: transaction/update.update
+    events:
+      - http:
+          path: transaction/{id}
+          method: put
+          cors: true
+
+  delete:
+    handler: transaction/delete.delete
+    events:
+      - http:
+          path: transaction/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    TransactionDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.TRANSACTION_TABLE}
