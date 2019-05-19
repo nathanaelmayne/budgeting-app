@@ -1,0 +1,11 @@
+.form-fields {
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-auto-flow: dense;
+}
+
+.form-actions {
+    text-align: right;
+}
