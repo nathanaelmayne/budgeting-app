@@ -8,7 +8,7 @@ const params: DynamoDB.ScanParam = {
 };
 
 module.exports.list = (event, context, callback) => {
-  // fetch all todos from the database
+  // fetch all transactions from the database
   dynamoDb.scan(params, (error, result) => {
     // handle potential errors
     if (error) {
@@ -20,6 +20,10 @@ module.exports.list = (event, context, callback) => {
     // create a response
     const response = {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json", 
+        "Access-Control-Allow-Origin": "*"
+      },
       body: JSON.stringify(result.Items),
     };
     callback(null, response);

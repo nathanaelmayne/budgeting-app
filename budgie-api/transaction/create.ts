@@ -17,7 +17,10 @@ module.exports.create = (event, context, callback) => {
     TableName: process.env.TRANSACTION_TABLE,
     Item: {
       id: uuid.v1(),
-      description: data.description,
+      type: data.type,
+      categoryId: data.categoryId,
+      amount: data.amount,
+      description: data.description
     }
   }
 
@@ -33,6 +36,10 @@ module.exports.create = (event, context, callback) => {
     // create a response
     const response = {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json", 
+        "Access-Control-Allow-Origin": "*"
+      },
       body: JSON.stringify(result.Item)
     }
 

@@ -12,7 +12,7 @@ module.exports.get = (event, context, callback) => {
     },
   };
 
-  // fetch todo from the database
+  // fetch transaction from the database
   dynamoDb.get(params, (error, result) => {
     // handle potential errors
     if (error) {

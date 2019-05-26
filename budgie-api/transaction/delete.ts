@@ -12,7 +12,7 @@ module.exports.delete = (event, context, callback) => {
     },
   };
 
-  // delete the todo from the database
+  // delete the transaction from the database
   dynamoDb.delete(params, (error) => {
     // handle potential errors
     if (error) {
@@ -24,6 +24,10 @@ module.exports.delete = (event, context, callback) => {
     // create a response
     const response = {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json", 
+        "Access-Control-Allow-Origin": "*"
+      },
       body: JSON.stringify({}),
     };
     callback(null, response);

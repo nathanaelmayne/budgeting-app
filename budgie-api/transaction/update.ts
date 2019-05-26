@@ -36,7 +36,7 @@ module.exports.update = (event, context, callback) => {
     ReturnValues: 'ALL_NEW',
   };
 
-  // update the todo in the database
+  // update the transaction in the database
   dynamoDb.update(params, (error, result) => {
     // handle potential errors
     if (error) {
@@ -48,6 +48,10 @@ module.exports.update = (event, context, callback) => {
     // create a response
     const response = {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json", 
+        "Access-Control-Allow-Origin": "*"
+      },
       body: JSON.stringify(result.Attributes),
     };
     callback(null, response);
