@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { TransactionType } from '../../enums/transaction-type.model';
 import { TransactionCategory } from '../../models/transaction-category';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormGroupDirective } from '@angular/forms';
 import { Transaction } from '../../models/transaction.model';
 import { TransactionService } from 'src/app/services/transaction.service';
+import { EventEmitter } from 'events';
 
 @Component({
   selector: 'app-transaction-form',
@@ -11,6 +12,8 @@ import { TransactionService } from 'src/app/services/transaction.service';
   styleUrls: ['./transaction-form.component.scss']
 })
 export class TransactionFormComponent implements OnInit {
+  @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
+  @Output() onTransactionSave = new EventEmitter();
   private transactionTypeKeys: string[] = Object.keys(TransactionType).filter(k => typeof TransactionType[k as any] === "number");
   private transactionForm: FormGroup;
   private transactionCategories: TransactionCategory[] = [
@@ -36,11 +39,6 @@ export class TransactionFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.transactionService
-        .list()
-        .subscribe(result => {
-          console.log(result);
-        });
     this.buildForm();
   }
 
@@ -63,15 +61,20 @@ export class TransactionFormComponent implements OnInit {
     };
 
     this.createTransaction(transaction)
-    this.clearForm()
   }
 
   createTransaction(transaction: Transaction) {
-    this.transactions.push(transaction);
+    this.transactionService
+      .add(transaction)
+      .subscribe(res => {
+        this.onTransactionSave.emit(null);
+        this.clearForm();
+      });
   }
 
   clearForm() {
-    this.transactionForm.reset();
+    this.transactionForm.reset();    
+    this.formGroupDirective.resetForm();
   }
 
   get type() { return this.transactionForm.get('type').value }

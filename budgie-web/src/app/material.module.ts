@@ -5,7 +5,8 @@ import {
     MatButtonModule,
     MatDividerModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule
 } from '@angular/material';
 
 const MATERIAL_MODULES = [
@@ -13,7 +14,8 @@ const MATERIAL_MODULES = [
     MatInputModule,
     MatDividerModule,
     MatSelectModule,
-    FormsModule
+    FormsModule,
+    MatIconModule
 ];
 
 

@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Transaction } from '../models/transaction.model';
@@ -16,18 +16,20 @@ export class TransactionService {
     }
 
     get(id: number): Observable<Transaction> {
-        return this.http.get<Transaction>(this.endpoint + '/' + id);
+        return this.http.get<Transaction>(this.endpoint + '/' + id)
     }
 
     add(transaction: Transaction): Observable<number> {
-        return this.http.post<number>(this.endpoint, transaction);
+        let headers = new HttpHeaders();
+        headers.append('Access-Control-Allow-Headers', '*');
+        return this.http.post<number>(this.endpoint, transaction, { headers: headers});
     }
 
     update(transaction: Transaction): Observable<number> {
         return this.http.put<number>(this.endpoint + '/' + transaction.id, transaction);
     }
 
-    delete(id: number): Observable<void> {
+    delete(id: string): Observable<void> {
         return this.http.delete<void>(this.endpoint + '/' + id);
     }
 }
